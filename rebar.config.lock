@@ -132,7 +132,7 @@
                    "fdb62672000be1477e2c8b6d02289abe411baf91"}},
        {riak_kv,".*",
                 {git,"git://github.com/bet365/riak_kv.git",
-                     "91b868bec68acf1f555167d8cb239ff7a53c59f1"}},
+                     "29f60ada7b503aaa6052bdf683a0667b45693c07"}},
        {erlydtl,".*",
                 {git,"git://github.com/erlydtl/erlydtl.git",
                      "d20b53f04837a1053ed18987f645cb60eae82453"}},
