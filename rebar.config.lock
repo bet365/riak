@@ -131,6 +131,7 @@
               {git,"git://github.com/basho/hyper",
                    "fdb62672000be1477e2c8b6d02289abe411baf91"}},
        {riak_kv,".*",
+
                 {git,"git://github.com/bet365/riak_kv.git",
                      "2caf52c6c237d9d3d91e55d21592a77706d75d15"}},
        {erlydtl,".*",
