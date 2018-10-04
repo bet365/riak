@@ -291,12 +291,19 @@ case "$1" in
                 fi
                 NODETOOL rpc riak_repl_console object_filtering_check_config $1
                 ;;                
-            print-config)
+            status)
                 if [ $# -ne 0 ]; then
-                  echo "Usage: $SCRIPT $ACTION start"
+                  echo "Usage: $SCRIPT $ACTION status"
                   exit 1
                 fi
-                NODETOOL rpc riak_repl_console object_filtering_print_config
+                NODETOOL rpc riak_repl_console object_filtering_status
+                ;;
+            status-all)
+                if [ $# -ne 0 ]; then
+                  echo "Usage: $SCRIPT $ACTION status-all"
+                  exit 1
+                fi
+                NODETOOL rpc riak_repl_console object_filtering_status_all
                 ;;
             *)
                 echo "Usage: $SCRIPT $ACTION enable |"
@@ -304,7 +311,8 @@ case "$1" in
                 echo "                       clear-config  |"                
                 echo "                       load-config '/PATH/TO/CONFIG/FILE'"
                 echo "                       check-config '/PATH/TO/CONFIG/FILE' |"
-                echo "                       print-config"
+                echo "                       status"
+                echo "                       status-all"
                 exit 1
             ;;
         esac
