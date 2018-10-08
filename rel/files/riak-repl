@@ -276,7 +276,7 @@ case "$1" in
                   echo "Usage: $SCRIPT $ACTION <<Mode>> clear-config"
                   exit 1
                 fi
-                NODETOOL rpc riak_repl_console object_filtering_clear_config
+                NODETOOL rpc riak_repl_console object_filtering_clear_config $1
                 ;;                
             load-config)
                 if [ $# -ne 2 ]; then
