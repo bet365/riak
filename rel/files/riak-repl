@@ -240,12 +240,13 @@ case "$1" in
         shift
 
         if [ $# -lt 1 -o $# -gt 3 ]; then
-            echo "Usage: $SCRIPT $ACTION reset |"
-            echo "                       add <bucket> <cluster> |"
-            echo "                       remove <bucket> <cluster> |"
-            echo "                       enable |"
-            echo "                       disable |"
-            echo "                       config"
+            echo "Usage: $SCRIPT $ACTION enable |"
+            echo "                       disable  |"
+            echo "                       clear-config  |"                
+            echo "                       load-config  <<Mode>> '/PATH/TO/CONFIG/FILE'"
+            echo "                       check-config '/PATH/TO/CONFIG/FILE' |"
+            echo "                       status"
+            echo "                       status-all"
             exit 1
         fi
 
@@ -271,18 +272,18 @@ case "$1" in
                 NODETOOL rpc riak_repl_console object_filtering_disable
                 ;;
             clear-config)
-                if [ $# -ne 0 ]; then
-                  echo "Usage: $SCRIPT $ACTION clear-config"
+                if [ $# -ne 1 ]; then
+                  echo "Usage: $SCRIPT $ACTION <<Mode>> clear-config"
                   exit 1
                 fi
                 NODETOOL rpc riak_repl_console object_filtering_clear_config
                 ;;                
             load-config)
-                if [ $# -ne 1 ]; then
-                  echo "Usage: $SCRIPT $ACTION load-config '/PATH/TO/CONFIG/FILE'"
+                if [ $# -ne 2 ]; then
+                  echo "Usage: $SCRIPT $ACTION load-config <<Mode> '/PATH/TO/CONFIG/FILE'"
                   exit 1
                 fi
-                NODETOOL rpc riak_repl_console object_filtering_load_config $1
+                NODETOOL rpc riak_repl_console object_filtering_load_config $1 $2
                 ;;
             check-config)
                 if [ $# -ne 1 ]; then
@@ -309,7 +310,7 @@ case "$1" in
                 echo "Usage: $SCRIPT $ACTION enable |"
                 echo "                       disable  |"
                 echo "                       clear-config  |"                
-                echo "                       load-config '/PATH/TO/CONFIG/FILE'"
+                echo "                       load-config  <<Mode>> '/PATH/TO/CONFIG/FILE'"
                 echo "                       check-config '/PATH/TO/CONFIG/FILE' |"
                 echo "                       status"
                 echo "                       status-all"
