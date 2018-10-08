@@ -242,7 +242,9 @@ case "$1" in
         if [ $# -lt 1 -o $# -gt 3 ]; then
             echo "Usage: $SCRIPT $ACTION enable |"
             echo "                       disable  |"
-            echo "                       clear-config  |"                
+            echo "                       clear-config  |"
+            echo "                       print-config <<Mode>> |"
+            echo "                       print-config <<Mode>> <<Remote Name>> |"                
             echo "                       load-config  <<Mode>> '/PATH/TO/CONFIG/FILE'"
             echo "                       check-config '/PATH/TO/CONFIG/FILE' |"
             echo "                       status"
@@ -273,10 +275,24 @@ case "$1" in
                 ;;
             clear-config)
                 if [ $# -ne 1 ]; then
-                  echo "Usage: $SCRIPT $ACTION <<Mode>> clear-config"
+                  echo "Usage: $SCRIPT $ACTION clear-config <<Mode>>"
                   exit 1
                 fi
                 NODETOOL rpc riak_repl_console object_filtering_clear_config $1
+                ;;
+            print-config)
+                if [ $# -ne 1 ]; then
+                  echo "Usage: $SCRIPT $ACTION print-config <<Mode>>"
+                  exit 1
+                fi
+                NODETOOL rpc riak_repl_console object_filtering_print_config $1
+                ;;
+            print-config)
+                if [ $# -ne 2 ]; then
+                  echo "Usage: $SCRIPT $ACTION print-config <<Mode>> <<Remote Name>>"
+                  exit 1
+                fi
+                NODETOOL rpc riak_repl_console object_filtering_print_config $1 $2
                 ;;                
             load-config)
                 if [ $# -ne 2 ]; then
@@ -309,7 +325,9 @@ case "$1" in
             *)
                 echo "Usage: $SCRIPT $ACTION enable |"
                 echo "                       disable  |"
-                echo "                       clear-config  |"                
+                echo "                       clear-config  |"
+                echo "                       print-config <<Mode>> |"
+                echo "                       print-config <<Mode>> <<Remote Name>> |"                
                 echo "                       load-config  <<Mode>> '/PATH/TO/CONFIG/FILE'"
                 echo "                       check-config '/PATH/TO/CONFIG/FILE' |"
                 echo "                       status"
