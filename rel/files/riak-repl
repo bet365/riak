@@ -240,14 +240,17 @@ case "$1" in
         shift
 
         if [ $# -lt 1 -o $# -gt 3 ]; then
-            echo "Usage: $SCRIPT $ACTION enable |"
-            echo "                       disable  |"
-            echo "                       status"
-            echo "                       status-all"
-            echo "                       clear-config <Mode> |"
-            echo "                       print-config <Mode> (optional <Remote Name>) |"                
-            echo "                       load-config  <Mode> <Path to config file>"
-            echo "                       check-config <Path to config file> |"
+            echo "Usage: $SCRIPT $ACTION"
+            echo ""
+            echo "enable"
+            echo "disable"
+            echo "status"
+            echo "status-all"
+            echo "clear-config <Mode> [Mode= all, repl, realtime, fullsync]"
+            echo "print-config <Mode> [Mode= realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync]"                
+            echo "             <Mode> <Remote Name>"
+            echo "load-config  <Mode> <Path to config file> [Mode= repl, realtime, fullsync]"
+            echo "check-config <Path to config file> |"
             exit 1
         fi
 
@@ -318,14 +321,17 @@ case "$1" in
                 NODETOOL rpc riak_repl_console object_filtering_check_config $1
                 ;;                
             *)
-                echo "Usage: $SCRIPT $ACTION enable |"
-                echo "                       disable  |"
-                echo "                       status"
-                echo "                       status-all"
-                echo "                       clear-config <Mode> |"
-                echo "                       print-config <Mode> (optional <Remote Name>) |"                
-                echo "                       load-config  <Mode> <Path to config file>"
-                echo "                       check-config <Path to config file> |"
+                echo "Usage: $SCRIPT $ACTION"
+                echo ""
+                echo "enable"
+                echo "disable"
+                echo "status"
+                echo "status-all"
+                echo "clear-config <Mode> [Mode= all, repl, realtime, fullsync]"
+                echo "print-config <Mode> [Mode= realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync]"                
+                echo "             <Mode> <Remote Name>"
+                echo "load-config  <Mode> <Path to config file> [Mode= repl, realtime, fullsync]"
+                echo "check-config <Path to config file> |"
                 exit 1
             ;;
         esac
