@@ -316,7 +316,7 @@ case "$1" in
                 ;;                
             load-config)
                 if [ $# -ne 2 ]; then
-                  echo "Usage: $SCRIPT $ACTION load-config <Mode> <Path to config file> [Mode = repl, realtime, fullsync"
+                  echo "Usage: $SCRIPT $ACTION load-config <Mode> <Path to config file> [Mode = repl, realtime, fullsync]"
                   exit 1
                 fi
                 NODETOOL rpc riak_repl_console object_filtering_load_config $1 $2
