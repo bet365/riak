@@ -174,7 +174,7 @@
                               "7ab150053eabfbc9353c6cdb6d4f5f0af0404e4f"}},
        {riak_repl,".*",
                   {git,"git://github.com/bet365/riak_repl.git",
-                       "5b1b7b0d48e9d67bdb60164a41da5a6c249035d0"}},
+                       "c74f92e836b576de718e637bf2c8c5523986f6bf"}},
        {rebar_lock_deps_plugin,".*",
                                {git,"https://github.com/basho/rebar_lock_deps_plugin.git",
                                     "8816f45ff38cd04d5c7741bd39166af58116dd44"}}]}.
