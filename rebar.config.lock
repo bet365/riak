@@ -48,7 +48,7 @@
                         "4f436ba2b67a7a95ed1d4ddd74a44a06661a77d1"}},
        {bitcask,".*",
                 {git,"git://github.com/bet365/bitcask.git",
-                     "40b2b31e24c19ab57747fd312e64dea2bb2d1c21"}},
+                     "a2e2f36d5abe60e5353fc8d14525b604f196d314"}},
        {edown,".*",
               {git,"git://github.com/uwiger/edown.git",
                    "d62ec85281e451a46ba30045917c119d65b72a84"}},
@@ -174,7 +174,7 @@
                               "7ab150053eabfbc9353c6cdb6d4f5f0af0404e4f"}},
        {riak_repl,".*",
                   {git,"git://github.com/bet365/riak_repl.git",
-                       "aa0ac720c6dc6a75f42c88086aa10accc8012d71"}},
+                       "66dc2bfeaffacb2d2a438e74239f497fe4c861b2"}},
        {rebar_lock_deps_plugin,".*",
                                {git,"https://github.com/basho/rebar_lock_deps_plugin.git",
                                     "8816f45ff38cd04d5c7741bd39166af58116dd44"}}]}.
