@@ -41,7 +41,12 @@ stat_admin()
             node_up_check
             NODETOOL rpc riak_core_console stat_show "$*"
             ;;
-       info)
+        show-disabled)
+            shift
+            node_up_check
+            NODETOOL rpc riak_core_console stat_disabled "$*"
+            ;;
+        info)
             shift
             node_up_check
             NODETOOL rpc riak_core_console stat_info "$*"
@@ -104,6 +109,7 @@ Quoting is permitted.
 Use \`$SCRIPT stat help <command>\` for more details.
 
    show <entry>                Show the value(s) of a specific entry or entries
+   show-disabled               Show the disabled value(s) of an entry
    enable <entry>              Enable entry or entries
    disable <entry>             Disable entry or entries
    reset <entry>               Reset entry or entries
