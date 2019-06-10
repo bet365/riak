@@ -247,8 +247,6 @@ case "$1" in
             echo "              <Mode> [Mode = realtime, fullsync]"
             echo "status"
             echo "status-all"
-            echo "force-update"
-            echo "force-update <Command> [Command = all, NodeName]"
             echo "clear  <Mode> [Mode = all, repl, realtime, fullsync]"
             echo "print  <Mode> [Mode = all, realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync]"
             echo "              <Mode> <Remote Name>"
@@ -298,16 +296,6 @@ case "$1" in
                   exit 1
                 fi
                 NODETOOL rpc riak_repl_console object_filtering_status_all
-                ;;
-            force-update)
-                if [ $# -eq 0 ]; then
-                    NODETOOL rpc riak_repl_console object_filtering_force_update
-                elif [ $# -eq 1 ]; then
-                    NODETOOL rpc riak_repl_console object_filtering_force_update $1
-                else
-                echo "Usage: $SCRIPT $ACTION force-update (optional Command> [Command = all, NodeName])"
-                exit 1
-                fi
                 ;;                
             clear)
                 if [ $# -ne 1 ]; then
@@ -348,8 +336,6 @@ case "$1" in
                 echo "              <Mode> [Mode = realtime, fullsync]"
                 echo "status"
                 echo "status-all"
-                echo "force-update"
-                echo "force-update <Command> [Command = all, NodeName]"
                 echo "clear  <Mode> [Mode = all, repl, realtime, fullsync]"
                 echo "print  <Mode> [Mode = all, realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync]"
                 echo "              <Mode> <Remote Name>"
