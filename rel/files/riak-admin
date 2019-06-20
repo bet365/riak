@@ -584,12 +584,11 @@ sbackend_admin()
 {
     case "$1" in
         add)
-            if [ $# -lt 2 ]; then
+            if [ $# -lt 3 ]; then
                 echo "Usage: $SCRIPT split-backend add <type> <name>";
                 exit 1
             else  # greater than 3 parameters
                 two=$2
-                shift 2
                 three=$3
                 NODETOOL rpc riak_kv_console add_split_backend "$two" "$three"
             fi
