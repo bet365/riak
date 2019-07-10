@@ -39,12 +39,22 @@ stat_admin()
         show)
             shift
             node_up_check
-            NODETOOL rpc riak_core_console stat_show "$*"
+            NODETOOL rpc riak_core_console stat_enabled "$*"
             ;;
         show-disabled)
             shift
             node_up_check
             NODETOOL rpc riak_core_console stat_disabled "$*"
+            ;;
+        show-0)
+            shift
+            node_up_check
+            NODETOOL rpc riak_core_console stat_0 "$*"
+            ;;
+        disable-0)
+            shift
+            node_up_check
+            NODETOOL rpc riak_core_console stat_disable_0 "$*"
             ;;
         info)
             shift
@@ -65,6 +75,26 @@ stat_admin()
             shift
             node_up_check
             NODETOOL rpc riak_core_console stat_reset "$*"
+            ;;
+        load-profile)
+            shift
+            node_up_check
+            NODETOOL rpc riak_core_console load_profile "$*"
+            ;;
+        save-profile)
+            shift
+            node_up_check
+            NODETOOL rpc riak_core_console add_profile "$*"
+            ;;
+        remove-profile)
+            shift
+            node_up_check
+            NODETOOL rpc riak_core_console remove_profile "$*"
+            ;;
+        reset-profile)
+            shift
+            node_up_check
+            NODETOOL rpc riak_core_console reset_profile "$*"
             ;;
         help)
             shift
@@ -109,7 +139,9 @@ Quoting is permitted.
 Use \`$SCRIPT stat help <command>\` for more details.
 
    show <entry>                Show the value(s) of a specific entry or entries
-   show-disabled               Show the disabled value(s) of an entry
+   show-disabled <entry>       Show the disabled value(s) of an entry
+   show-0 <entry>              Show the values in exometer that are not updating
+   disable-0 <entry>           Disable entry or entries that are not updating
    enable <entry>              Enable entry or entries
    disable <entry>             Disable entry or entries
    reset <entry>               Reset entry or entries
@@ -119,7 +151,19 @@ Use \`$SCRIPT stat help <command>\` for more details.
         | -status | -timestamp
         | -options | -ref
         | -datapoints ] <entry>
-"
+
+   Profiles:
+
+        Enable / Disable the stats necessary and save a that configuration into
+        the metadata for all the nodes to access using:
+
+        riak-admin stat save-profile <profile_name>
+
+   load-profile <entry>        Loads a profile
+   save-profile <entry>        Saves the current stats status as a profile of name: <entry>
+   reset-profile               Enables all the stats and unloads the current profile
+   remove-profile <entry>      Removes the profile from the metadata
+   "
 }
 
 stat_show_help()
