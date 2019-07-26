@@ -93,7 +93,7 @@
                     "baed0a08165d08e7c6e363996e1fc3e5bef8e0cf"}},
        {riak_core,".*",
                   {git,"https://github.com/bet365/riak_core.git",
-                       "8385cb741e1f1f4492e4512b8568e0f77880018c"}},
+                       "092c496644253e860cdf91b94aa291d45a50d97a"}},
        {riak_pipe,".*",
                   {git,"git://github.com/bet365/riak_pipe.git",
                        "e5ba7b418e65654496e9a4ccc7baa26d4d7632b4"}},
