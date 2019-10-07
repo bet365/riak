@@ -48,7 +48,7 @@
                         "4f436ba2b67a7a95ed1d4ddd74a44a06661a77d1"}},
        {bitcask,".*",
                 {git,"git://github.com/bet365/bitcask.git",
-                     "c5d3f5967473db1017625a559b8ef46ec44f6da8"}},
+                     "1bb6b5c1493e83315299e154f01cfe71b1f4fe32"}},
        {edown,".*",
               {git,"git://github.com/uwiger/edown.git",
                    "d62ec85281e451a46ba30045917c119d65b72a84"}},
