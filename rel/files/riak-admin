@@ -28,7 +28,7 @@ usage() {
     echo "                    cluster-info | member-status | ring-status | vnode-status |"
     echo "                    aae-status | diag | stat | status | transfer-limit | reformat-indexes |"
     echo "                    top [-interval N] [-sort reductions|memory|msg_q] [-lines N] |"
-    echo "                    downgrade-objects | security | bucket-type | repair-2i |"
+    echo "                    downgrade-objects | security | bucket-type | split-backend | repair-2i |"
     echo "                    search | services | ensemble-status | handoff | set |"
     echo "                    show | describe }"
 }
@@ -580,6 +580,29 @@ Available commands:
     esac
 }
 
+sbackend_admin()
+{
+    case "$1" in
+        add)
+            if [ $# -lt 3 ]; then
+                echo "Usage: $SCRIPT split-backend add <type> <name>";
+                exit 1
+            else  # greater than 3 parameters
+                two=$2
+                three=$3
+                NODETOOL rpc riak_kv_console add_split_backend "$two" "$three"
+            fi
+            node_up_check
+            ;;
+        *)
+            echo "\
+Usage: $SCRIPT split-backend <command>
+The follow commands can be used to manage bucket types for the cluster:
+   add <type> <name>              List all bucket types and their activation status
+"
+    esac
+}
+
 btype_admin()
 {
     case "$1" in
@@ -1065,6 +1088,10 @@ case "$1" in
     bucket-type)
         shift
         btype_admin "$@"
+        ;;
+    split-backend)
+        shift
+        sbackend_admin "$@"
         ;;
     handoff)
         # New pattern for command line. Use nodetool for RPC
