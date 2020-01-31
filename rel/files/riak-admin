@@ -28,7 +28,7 @@ usage() {
     echo "                    cluster-info | member-status | ring-status | vnode-status |"
     echo "                    aae-status | diag | stat | status | transfer-limit | reformat-indexes |"
     echo "                    top [-interval N] [-sort reductions|memory|msg_q] [-lines N] |"
-    echo "                    downgrade-objects | security | bucket-type | split-backend | activate-backend | repair-2i |"
+    echo "                    downgrade-objects | security | bucket-type | split-backend | repair-2i |"
     echo "                    search | services | ensemble-status | handoff | set |"
     echo "                    show | describe }"
 }
@@ -583,43 +583,65 @@ Available commands:
 sbackend_admin()
 {
     case "$1" in
-        add)
+        add_all)
             if [ $# -lt 2 ]; then
-                echo "Usage: $SCRIPT split-backend add <name>";
+                echo "Usage: $SCRIPT split-backend add_all <name>";
                 exit 1
             else  # greater than 2 parameters
                 two=$2
-                NODETOOL rpc riak_kv_console add_split_backend "$two"
+                NODETOOL rpc riak_kv_console add_split_backend_local "$two"
+            fi
+            node_up_check
+            ;;
+        add_single)
+            if [ $# -lt 3 ]; then
+                echo "Usage: $SCRIPT split-backend add_single <name> <partition_id>";
+                exit 1
+            else  # greater than 2 parameters
+                two=$2
+                three=$3
+                NODETOOL rpc riak_kv_console add_split_backend_local "$two" "$three"
+            fi
+            node_up_check
+            ;;
+        activate_all)
+            if [ $# -lt 2 ]; then
+                echo "Usage: $SCRIPT split-backend activate <name>";
+                exit 1
+            else
+                two=$2
+                NODETOOL rpc riak_kv_console activate_split_backend_local "$two"
+            fi
+            node_up_check
+            ;;
+        activate_single)
+            if [ $# -lt 3 ]; then
+                echo "Usage: $SCRIPT split-backend activate <name> <partition_id>";
+                exit 1
+            else
+                two=$2
+                three=$3
+                NODETOOL rpc riak_kv_console activate_split_backend_local "$two" "$three"
+            fi
+            node_up_check
+            ;;
+        special_merge)
+            if [ $# -lt 2 ]; then
+                echo "Usage: $SCRIPT split-backend special_merge <name>";
+                exit 1
+            else
+                two=$2
+                NODETOOL rpc riak_kv_console special_merge "$two"
             fi
             node_up_check
             ;;
         *)
             echo "\
 Usage: $SCRIPT split-backend <command>
-The following commands can be used to manage bucket types for the cluster:
-   add <name>              List all bucket types and their activation status
-"
-    esac
-}
-
-abackend_admin()
-{
-    case "$1" in
-        activate)
-            if [ $# -lt 2 ]; then
-                echo "Usage: $SCRIPT activate-backend activate <name>";
-                exit 1
-            else
-                two=$2
-                NODETOOL rpc riak_kv_console activate_split_backend "$two"
-            fi
-            node_up_check
-            ;;
-        *)
-            echo "\
-Usage: $SCRIPT activate-backend <command>
-The following commands can be used to manage bucket types for the cluster:
-   activate <name>              List all bucket types and their activation status
+The following commands can be used to manage bitcask splits for the cluster:
+   add <name>              Adds new split to bitcask
+   activate <name>               Activates the new bitcask split
+   special_merge <name>          Merges data belonging to split from the previous bitcask location to the new split
 "
     esac
 }
@@ -1113,10 +1135,6 @@ case "$1" in
     split-backend)
         shift
         sbackend_admin "$@"
-        ;;
-    activate-backend)
-        shift
-        abackend_admin "$@"
         ;;
     handoff)
         # New pattern for command line. Use nodetool for RPC
