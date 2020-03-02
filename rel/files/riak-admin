@@ -625,13 +625,24 @@ sbackend_admin()
             fi
             node_up_check
             ;;
-        special_merge)
+        special_merge_all)
             if [ $# -lt 2 ]; then
                 echo "Usage: $SCRIPT split-backend special_merge <name>";
                 exit 1
             else
                 two=$2
-                NODETOOL rpc riak_kv_console special_merge "$two"
+                NODETOOL rpc riak_kv_console special_merge_local "$two"
+            fi
+            node_up_check
+            ;;
+          special_merge_single)
+            if [ $# -lt 3 ]; then
+                echo "Usage: $SCRIPT split-backend special_merge <name> <partition_id";
+                exit 1
+            else
+                two=$2
+                three=$3
+                NODETOOL rpc riak_kv_console special_merge_local "$two" "$three"
             fi
             node_up_check
             ;;
@@ -639,9 +650,12 @@ sbackend_admin()
             echo "\
 Usage: $SCRIPT split-backend <command>
 The following commands can be used to manage bitcask splits for the cluster:
-   add <name>              Adds new split to bitcask
-   activate <name>               Activates the new bitcask split
-   special_merge <name>          Merges data belonging to split from the previous bitcask location to the new split
+   add_all <name>                               Adds new split to bitcask for all partitions
+   add_single <name> <partition_id>             Adds new split to bitcask for a single partition
+   activate_all <name>                          Activates the new bitcask split for all partitions
+   activate_single <name> <partition_id>        Activates the new bitcask split for a single partition
+   special_merge_all <name>                     Merges data belonging to split from the previous bitcask location to the new split for all partitions
+   special_merge_single <name> <partition_id>   Merges data belonging to split from the previous bitcask location to the new split for a single partition
 "
     esac
 }
