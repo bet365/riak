@@ -23,6 +23,15 @@ SCRIPT=`basename $0`
 #
 # Repl2 Commands
 #
+case "$1" in
+    status)
+        # Make sure the local node is running
+        node_up_check
+
+        shift
+
+        NODETOOL rpc riak_repl_console status $@
+        ;;    
     clusterstats)
         ACTION=$1
 
