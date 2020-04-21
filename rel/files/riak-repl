@@ -102,6 +102,230 @@ case "$1" in
             NODETOOL rpc riak_repl_console $CMD $1 $2
         fi
         ;;
+    realtime)
+        ACTION=$1
+        shift
+        # Make sure the local node is running
+        node_up_check
+        if [ $# -lt 1 ]; then
+            echo "Usage: $SCRIPT $ACTION enable <clustername> |"
+            echo "                       disable <clustername> |"
+            echo "                       start [<clustername>] |"
+            echo "                       stop [<clustername>] |"
+            echo "                       cascades [ always | never ] |"
+            echo "                       rebalance [<clustername>] |"
+            echo "                       heartbeat_timeout <clustername> [<value>] |"
+            echo "                       heartbeat_interval <clustername> [<value>] |"
+            echo "                       remote_max_bytes <clustername> [<value>] |"
+            echo "                       connections_per_queue <clustername> [<value>] |"
+            echo "                       retry_limit <clustername> [<value>] |"                                                
+            exit 1
+        fi
+        SUB_CMD=$1
+        shift
+        case $SUB_CMD in
+            enable|disable)
+                if [ $# -lt 1 ]; then
+                    echo "Usage: $SCRIPT $ACTION {enable|disable} <clustername>"
+                    exit 1
+                fi
+                NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $1
+                ;;
+
+            start|stop)
+                if [ $# -lt 1 ]; then
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD
+                    exit 1
+                else
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $1
+                fi
+                ;;
+
+            cascades)
+                if [ "$ACTION" != "realtime" ]; then
+                    echo "cascades is only available for realtime"
+                    exit 1
+                fi
+                NEWVAL=$1
+                RES=`NODETOOL ping`
+                if [ "$RES" != "pong" ]; then
+                    echo "Node is not running!"
+                    exit 1
+                fi
+                NODETOOL rpc riak_repl_console realtime_cascades $@
+                ;;
+
+            rebalance)
+                if [ $# -lt 1 ]; then
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD
+                    exit 1
+                else
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $1
+                fi
+                ;;             
+
+            heartbeat_timeout)
+                if [ $# -lt 1 ]; then
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> <time (seconds)> |"
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> |"
+                    exit 1
+                fi
+                REMOTE=$1
+                shift
+                if [ $# -lt 1 ]; then
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
+                else
+                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                fi
+                ;;
+
+            heartbeat_interval)
+                if [ $# -lt 1 ]; then
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> <time (seconds)> |"
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> |"
+                    exit 1
+                fi
+                REMOTE=$1
+                shift
+                if [ $# -lt 1 ]; then
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
+                else
+                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                fi
+                ;;
+
+            remote_max_bytes)
+                if [ $# -lt 1 ]; then
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> <bytes> |"
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> |"
+                    exit 1
+                fi
+                REMOTE=$1
+                shift
+                if [ $# -lt 1 ]; then
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
+                else
+                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                fi
+                ;;                
+
+            connections_per_queue)
+                if [ $# -lt 1 ]; then
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> <number> |"
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> |"
+                    exit 1
+                fi
+                REMOTE=$1
+                shift
+                if [ $# -lt 1 ]; then
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
+                else
+                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                fi
+                ;;  
+
+            retry_limit)
+                if [ $# -lt 1 ]; then
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> <number> |"
+                    echo "Usage: $SCRIPT $ACTION $SUB_CMD <clustername> |"
+                    exit 1
+                fi
+                REMOTE=$1
+                shift
+                if [ $# -lt 1 ]; then
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
+                else
+                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                fi
+                ;; 
+
+            *)
+                echo "Usage: "
+                exit 1
+                ;;
+        esac
+        ;;
+
+    fullsync)
+        ACTION=$1
+        shift
+        # Make sure the local node is running
+        node_up_check
+        if [ $# -lt 1 ]; then
+            echo "Usage: $SCRIPT $ACTION enable <clustername> |"
+            echo "                       disable <clustername> |"
+            echo "                       start [<clustername>] |"
+            echo "                       stop [<clustername>] |"
+            echo "                       max_fssource_node [<value>] |"
+            echo "                       max_fssource_cluster [<value>] |"
+            echo "                       max_fssink_node [<value>]"
+            exit 1
+        fi
+        SUB_CMD=$1
+        shift
+        case $SUB_CMD in
+            enable|disable)
+                if [ $# -lt 1 ]; then
+                    echo "Usage: $SCRIPT $ACTION {enable|disable} <clustername>"
+                    exit 1
+                fi
+                NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $1
+                ;;
+            start|stop)
+                if [ $# -lt 1 ]; then
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD
+                    exit 1
+                else
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $1
+                fi
+                ;;
+
+            max_fssource_node)
+                if [ "$ACTION" != "fullsync" ]; then
+                    echo "max_fssource_node is only available for fullsync"
+                    exit 1
+                fi
+                NEWVAL=$1
+                # Make sure the local node is running
+                node_up_check
+                NODETOOL rpc riak_repl_console $SUB_CMD $@
+                ;;
+
+            max_fssink_node)
+                if [ "$ACTION" != "fullsync" ]; then
+                    echo "max_fssink_node is only available for fullsync"
+                    exit 1
+                fi
+                NEWVAL=$1
+                # Make sure the local node is running
+                node_up_check
+                NODETOOL rpc riak_repl_console $SUB_CMD $@
+                ;;
+
+            max_fssource_cluster)
+                if [ "$ACTION" != "fullsync" ]; then
+                    echo "max_fssource_cluster is only available for fullsync"
+                    exit 1
+                fi
+                NEWVAL=$1
+                # Make sure the local node is running
+                node_up_check
+                NODETOOL rpc riak_repl_console $SUB_CMD $@
+                ;;
+
+            *)
+                echo "Usage: $SCRIPT $ACTION enable <clustername> |"
+                echo "                       disable <clustername> |"
+                echo "                       start [<clustername>] |"
+                echo "                       stop [<clustername>] |"
+                echo "                       max_fssource_node [<value>] |"
+                echo "                       max_fssource_cluster [<value>] |"
+                echo "                       max_fssink_node [<value>]"
+                exit 1
+                ;;
+        esac
+        ;;
+
 
     object-filtering)
         ACTION=$1
@@ -224,99 +448,6 @@ case "$1" in
 
         NODETOOL rpc riak_repl_console $CMD $@
         ;;
-    realtime|fullsync)
-        ACTION=$1
-        shift
-
-        # Make sure the local node is running
-        node_up_check
-
-        if [ $# -lt 1 ]; then
-            echo "Usage: $SCRIPT $ACTION enable <clustername> |"
-            echo "                       disable <clustername> |"
-            echo "                       start [<clustername>] |"
-            echo "                       stop [<clustername>] |"
-            echo "                       cascades [ always | never ] | (realtime only)"
-            echo "                       max_fssource_node [<value>] | (fullsync only)"
-            echo "                       max_fssource_cluster [<value>] | (fullsync only)"
-            echo "                       max_fssink_node [<value>] (fullsync only)"
-            exit 1
-        fi
-        SUB_CMD=$1
-        shift
-        case $SUB_CMD in
-            enable|disable)
-                if [ $# -lt 1 ]; then
-                    echo "Usage: $SCRIPT $ACTION {enable|disable} <clustername>"
-                    exit 1
-                fi
-                NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $1
-                ;;
-            start|stop)
-                if [ $# -lt 1 ]; then
-                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD
-                    exit 1
-                else
-                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $1
-                fi
-                ;;
-            max_fssource_node)
-              if [ "$ACTION" != "fullsync" ]; then
-                echo "max_fssource_node is only available for fullsync"
-                exit 1
-              fi
-              NEWVAL=$1
-
-              # Make sure the local node is running
-              node_up_check
-
-              NODETOOL rpc riak_repl_console $SUB_CMD $@
-              ;;
-            cascades)
-              if [ "$ACTION" != "realtime" ]; then
-                echo "cascades is only available for realtime"
-                exit 1
-              fi
-              NEWVAL=$1
-              RES=`NODETOOL ping`
-              if [ "$RES" != "pong" ]; then
-                echo "Node is not running!"
-                exit 1
-              fi
-              NODETOOL rpc riak_repl_console realtime_cascades $@
-              ;;
-            max_fssource_cluster)
-              if [ "$ACTION" != "fullsync" ]; then
-                echo "max_fssource_cluster is only available for fullsync"
-                exit 1
-              fi
-              NEWVAL=$1
-
-              # Make sure the local node is running
-              node_up_check
-
-              NODETOOL rpc riak_repl_console $SUB_CMD $@
-              ;;
-            max_fssink_node)
-              if [ "$ACTION" != "fullsync" ]; then
-                echo "max_fssink_node is only available for fullsync"
-                exit 1
-              fi
-              NEWVAL=$1
-
-              # Make sure the local node is running
-              node_up_check
-
-              NODETOOL rpc riak_repl_console $SUB_CMD $@
-              ;;
-            *)
-                echo "Usage: $SCRIPT $ACTION realtime start [clustername] |"
-                echo "                       realtime stop [clustername]"
-                exit 1
-                ;;
-        esac
-        ;;
-
 
     proxy_get)
         ACTION=$1
