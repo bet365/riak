@@ -175,7 +175,7 @@ case "$1" in
                 if [ $# -lt 1 ]; then
                     NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
                 else
-                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE $1
                 fi
                 ;;
 
@@ -190,7 +190,7 @@ case "$1" in
                 if [ $# -lt 1 ]; then
                     NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
                 else
-                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE $1
                 fi
                 ;;
 
@@ -205,7 +205,7 @@ case "$1" in
                 if [ $# -lt 1 ]; then
                     NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
                 else
-                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE $1
                 fi
                 ;;                
 
@@ -220,7 +220,7 @@ case "$1" in
                 if [ $# -lt 1 ]; then
                     NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
                 else
-                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE $1
                 fi
                 ;;  
 
@@ -235,12 +235,22 @@ case "$1" in
                 if [ $# -lt 1 ]; then
                     NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE
                 else
-                    NODETOOL rpc riak_repl_console $SUB_CMD $REMOTE $1
+                    NODETOOL rpc riak_repl_console $ACTION $SUB_CMD $REMOTE $1
                 fi
                 ;; 
 
             *)
-                echo "Usage: "
+                echo "Usage: $SCRIPT $ACTION enable <clustername> |"
+                echo "                       disable <clustername> |"
+                echo "                       start [<clustername>] |"
+                echo "                       stop [<clustername>] |"
+                echo "                       cascades [ always | never ] |"
+                echo "                       rebalance [<clustername>] |"
+                echo "                       heartbeat_timeout <clustername> [<value>] |"
+                echo "                       heartbeat_interval <clustername> [<value>] |"
+                echo "                       remote_max_bytes <clustername> [<value>] |"
+                echo "                       connections_per_queue <clustername> [<value>] |"
+                echo "                       retry_limit <clustername> [<value>] |"                                                
                 exit 1
                 ;;
         esac
