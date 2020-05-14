@@ -346,4 +346,3 @@ make check_plt
 #+BEGIN_SRC shell
 make dialyzer
 #+END_SRC
-#
