@@ -75,6 +75,7 @@ mkdir -p %{buildroot_bin}
 mkdir -p %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}%{_localstatedir}/lib/riak
 mkdir -p %{buildroot}%{_localstatedir}/log/riak
+mkdir -p %{buildroot}%{_localstatedir}/run/riak
 
 cp -R %{relpath}/lib       %{buildroot_lib}
 cp -R %{relpath}/erts-*    %{buildroot_lib}
@@ -144,6 +145,7 @@ exit 0
 %defattr(-,riak,riak)
 %{_localstatedir}/lib/riak
 %{_localstatedir}/log/riak
+%{_localstatedir}/run/riak
 %{_libdir}/*
 %defattr(-,root,root)
 %{_sysconfdir}/init.d/riak
