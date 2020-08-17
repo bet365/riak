@@ -120,7 +120,7 @@
   2},
  {<<"riak_kv">>,
   {git,"git://github.com/bet365/riak_kv.git",
-       {ref,"cacaaa7e12ba423bd5dee5b831d1b1e40a5ca7e8"}},
+       {ref,"c56365f304ffdadd23b8be6a9e3ccc9b138dc469"}},
   0},
  {<<"riak_pb">>,
   {git,"git://github.com/basho/riak_pb.git",
