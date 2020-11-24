@@ -23,8 +23,8 @@ else
     case $1 in
         show)
             echo "Available commands:"
-            for d in `find $COMMAND_DIR -type d`; do
-                find $d -maxdepth 1 -name *.erl | sed -E "s#$COMMAND_DIR|.erl##g";
+            for d in `find -L $COMMAND_DIR -type d`; do
+                find -L $d -maxdepth 1 -name *.erl | sed -E "s#$COMMAND_DIR|.erl##g" | sort;
             done
             ;;
         *)
