@@ -1,0 +1,43 @@
+#!/bin/sh
+# -*- tab-width:4;indent-tabs-mode:nil -*-
+# ex: ts=4 sw=4 et
+
+# Keep track of where script was invoked
+ORIGINAL_DIR=$(pwd)
+
+# Make sure CWD is set to runner run dir
+cd $RELEASE_ROOT_DIR
+
+COMMAND_DIR="{{platform_bin_dir}}/commands/"
+
+usage() {
+    echo "\
+Usage: riak command show|<command>
+show - display a list of available commands
+<command> - execute command"
+}
+
+if [ -z $1 ]; then
+    usage
+else
+    case $1 in
+        show)
+            echo "Available commands:"
+            for d in `find $COMMAND_DIR -type d`; do
+                find $d -maxdepth 1 -name *.erl | sed -E "s#$COMMAND_DIR|.erl##g";
+            done
+            ;;
+        *)
+            COMMAND_SCRIPT="${COMMAND_DIR}${1}.erl"
+            if [ -f $COMMAND_SCRIPT ]; then
+                relx_nodetool eval `cat $COMMAND_SCRIPT`
+            else
+                echo "$1: command not found"
+                usage
+            fi
+            ;;
+    esac
+fi
+
+# No explicit exit from within script or nodetool, assumed to have succeeded.
+exit 0
