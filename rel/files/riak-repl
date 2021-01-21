@@ -198,6 +198,118 @@ case "$1" in
         fi
         ;;
 
+    object-filtering)
+        ACTION=$1
+        shift
+
+        if [ $# -lt 1 -o $# -gt 3 ]; then
+            echo "Usage: $SCRIPT $ACTION"
+            echo "enable        (enables realtime and fullsync)"
+            echo "              <Mode> [Mode = realtime, fullsync]"
+            echo "disable       (disables realtime and fullsync)"
+            echo "              <Mode> [Mode = realtime, fullsync]"
+            echo "status"
+            echo "status-all"
+            echo "clear  <Mode> [Mode = all, repl, realtime, fullsync]"
+            echo "print  <Mode> [Mode = all, realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync]"
+            echo "              <Mode> <Remote Name>"
+            echo "load   <Mode> <Path to config file> [Mode = repl, realtime, fullsync]"
+            echo "check  <Path to config file>"
+            echo ""
+            exit 1
+        fi
+
+        # Make sure the local node is running
+        node_up_check
+
+        SUB_CMD=$1
+        shift
+
+        case "${SUB_CMD}" in
+            enable)
+                if [ $# -eq 0 ]; then
+                    NODETOOL rpc riak_repl_console object_filtering_enable
+                elif [ $# -eq 1 ]; then
+                    NODETOOL rpc riak_repl_console object_filtering_enable $1
+                else 
+                    echo "Usage: $SCRIPT $ACTION enable (optional <Mode> [Mode = realtime, fullsync])"
+                    exit 1
+                fi
+                ;;
+            disable)
+                if [ $# -eq 0 ]; then
+                    NODETOOL rpc riak_repl_console object_filtering_disable
+                elif [ $# -eq 1 ]; then
+                    NODETOOL rpc riak_repl_console object_filtering_disable $1
+                else 
+                    echo "Usage: $SCRIPT $ACTION disable (optional <Mode> [Mode = realtime, fullsync])"
+                    exit 1
+                fi
+                ;;
+            status)
+                if [ $# -ne 0 ]; then
+                  echo "Usage: $SCRIPT $ACTION status"
+                  exit 1
+                fi
+                NODETOOL rpc riak_repl_console object_filtering_status
+                ;;
+            status-all)
+                if [ $# -ne 0 ]; then
+                  echo "Usage: $SCRIPT $ACTION status-all"
+                  exit 1
+                fi
+                NODETOOL rpc riak_repl_console object_filtering_status_all
+                ;;                
+            clear)
+                if [ $# -ne 1 ]; then
+                  echo "Usage: $SCRIPT $ACTION clear-config <Mode> [Mode = all, repl, realtime, fullsync]"
+                  exit 1
+                fi
+                NODETOOL rpc riak_repl_console object_filtering_clear_config $1
+                ;;
+            print)
+                if [ $# -eq 1 ]; then
+                    NODETOOL rpc riak_repl_console object_filtering_print_config $1
+                elif [ $# -eq 2 ]; then
+                    NODETOOL rpc riak_repl_console object_filtering_print_config $1 $2
+                else
+                echo "Usage: $SCRIPT $ACTION print-config <Mode> [Mode = all, realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync] (optional <Remote Name>)"
+                exit 1
+                fi
+                ;;                
+            load)
+                if [ $# -ne 2 ]; then
+                  echo "Usage: $SCRIPT $ACTION load-config <Mode> <Path to config file> [Mode = repl, realtime, fullsync]"
+                  exit 1
+                fi
+                NODETOOL rpc riak_repl_console object_filtering_load_config $1 $2
+                ;;
+            check)
+                if [ $# -ne 1 ]; then
+                  echo "Usage: $SCRIPT $ACTION check-config <Path to config file>"
+                  exit 1
+                fi
+                NODETOOL rpc riak_repl_console object_filtering_check_config $1
+                ;;                
+            *)
+                echo "Usage: $SCRIPT $ACTION"
+                echo "enable        (enables realtime and fullsync)"
+                echo "              <Mode> [Mode = realtime, fullsync]"
+                echo "disable       (disables realtime and fullsync)"
+                echo "              <Mode> [Mode = realtime, fullsync]"
+                echo "status"
+                echo "status-all"
+                echo "clear  <Mode> [Mode = all, repl, realtime, fullsync]"
+                echo "print  <Mode> [Mode = all, realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync]"
+                echo "              <Mode> <Remote Name>"
+                echo "load   <Mode> <Path to config file> [Mode = repl, realtime, fullsync]"
+                echo "check  <Path to config file>"
+                echo ""
+                exit 1
+            ;;
+        esac
+    ;;    
+
   modes)
         CMD=$1
         shift
