@@ -16,8 +16,6 @@ V2REPLDEP="DEPRECATION NOTICE: The replication protocol you are currently using 
 # Check the first argument for instructions
 case "$1" in
     status)
-        # Make sure the local node is running
-
         shift
 
         relx_nodetool rpc riak_repl_console status $@
@@ -32,8 +30,6 @@ case "$1" in
             exit 1
         fi
 
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console add_listener $1 $2 $3
         ;;
 
@@ -45,8 +41,6 @@ case "$1" in
             echo "Usage $SCRIPT $ACTION <nodename> <listen_ip> <port> <public_ip> <public_port>"
             exit 1
         fi
-
-        # Make sure the local node is running
 
         relx_nodetool rpc riak_repl_console add_nat_listener $1 $2 $3 $4 $5
         ;;
@@ -61,8 +55,6 @@ case "$1" in
             exit 1
         fi
 
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console del_listener $1 $2 $3
         ;;
 
@@ -75,8 +67,6 @@ case "$1" in
             exit 1
         fi
 
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console add_site $1 $2 $3
         ;;
    del-site)
@@ -88,16 +78,12 @@ case "$1" in
             exit 1
         fi
 
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console del_site $1
         ;;
     start-fullsync)
         echo $V2REPLDEP
         ACTION=$1
         shift
-
-        # Make sure the local node is running
 
         relx_nodetool rpc riak_repl_console start_fullsync
         ;;
@@ -106,16 +92,12 @@ case "$1" in
         ACTION=$1
         shift
 
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console cancel_fullsync
         ;;
     pause-fullsync)
         echo $V2REPLDEP
         ACTION=$1
         shift
-
-        # Make sure the local node is running
 
         relx_nodetool rpc riak_repl_console pause_fullsync
         ;;
@@ -124,8 +106,6 @@ case "$1" in
         ACTION=$1
         shift
 
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console resume_fullsync
         ;;
 #
@@ -133,8 +113,6 @@ case "$1" in
 #
     clusterstats)
         ACTION=$1
-
-        # Make sure the local node is running
 
         shift
         if [ $# -lt 1 ]; then
@@ -151,8 +129,6 @@ case "$1" in
             exit 1
         fi
 
-        # Make sure the local node is running
-
         if [ $# -lt 1 ]; then
             relx_nodetool rpc riak_repl_console $ACTION
         else
@@ -166,8 +142,6 @@ case "$1" in
             echo "Usage: $SCRIPT $ACTION"
             exit 1
         fi
-
-        # Make sure the local node is running
 
         relx_nodetool rpc riak_repl_console $ACTION
         ;;
@@ -187,8 +161,6 @@ case "$1" in
             exit 1
         fi
 
-        # Make sure the local node is running
-
         if [ $# -lt 2 ]; then
             # by clustername or ip:port
             relx_nodetool rpc riak_repl_console $CMD $1
@@ -198,19 +170,124 @@ case "$1" in
         fi
         ;;
 
+    object-filtering)
+        ACTION=$1
+        shift
+
+        if [ $# -lt 1 -o $# -gt 3 ]; then
+            echo "Usage: $SCRIPT $ACTION"
+            echo "enable        (enables realtime and fullsync)"
+            echo "              <Mode> [Mode = realtime, fullsync]"
+            echo "disable       (disables realtime and fullsync)"
+            echo "              <Mode> [Mode = realtime, fullsync]"
+            echo "status"
+            echo "status-all"
+            echo "clear  <Mode> [Mode = all, repl, realtime, fullsync]"
+            echo "print  <Mode> [Mode = all, realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync]"
+            echo "              <Mode> <Remote Name>"
+            echo "load   <Mode> <Path to config file> [Mode = repl, realtime, fullsync]"
+            echo "check  <Path to config file>"
+            echo ""
+            exit 1
+        fi
+
+        SUB_CMD=$1
+        shift
+
+        case "${SUB_CMD}" in
+            enable)
+                if [ $# -eq 0 ]; then
+                    relx_nodetool rpc riak_repl_console object_filtering_enable
+                elif [ $# -eq 1 ]; then
+                    relx_nodetool rpc riak_repl_console object_filtering_enable $1
+                else 
+                    echo "Usage: $SCRIPT $ACTION enable (optional <Mode> [Mode = realtime, fullsync])"
+                    exit 1
+                fi
+                ;;
+            disable)
+                if [ $# -eq 0 ]; then
+                    relx_nodetool rpc riak_repl_console object_filtering_disable
+                elif [ $# -eq 1 ]; then
+                    relx_nodetool rpc riak_repl_console object_filtering_disable $1
+                else 
+                    echo "Usage: $SCRIPT $ACTION disable (optional <Mode> [Mode = realtime, fullsync])"
+                    exit 1
+                fi
+                ;;
+            status)
+                if [ $# -ne 0 ]; then
+                  echo "Usage: $SCRIPT $ACTION status"
+                  exit 1
+                fi
+                relx_nodetool rpc riak_repl_console object_filtering_status
+                ;;
+            status-all)
+                if [ $# -ne 0 ]; then
+                  echo "Usage: $SCRIPT $ACTION status-all"
+                  exit 1
+                fi
+                relx_nodetool rpc riak_repl_console object_filtering_status_all
+                ;;                
+            clear)
+                if [ $# -ne 1 ]; then
+                  echo "Usage: $SCRIPT $ACTION clear-config <Mode> [Mode = all, repl, realtime, fullsync]"
+                  exit 1
+                fi
+                relx_nodetool rpc riak_repl_console object_filtering_clear_config $1
+                ;;
+            print)
+                if [ $# -eq 1 ]; then
+                    relx_nodetool rpc riak_repl_console object_filtering_print_config $1
+                elif [ $# -eq 2 ]; then
+                    relx_nodetool rpc riak_repl_console object_filtering_print_config $1 $2
+                else
+                echo "Usage: $SCRIPT $ACTION print-config <Mode> [Mode = all, realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync] (optional <Remote Name>)"
+                exit 1
+                fi
+                ;;                
+            load)
+                if [ $# -ne 2 ]; then
+                  echo "Usage: $SCRIPT $ACTION load-config <Mode> <Path to config file> [Mode = repl, realtime, fullsync]"
+                  exit 1
+                fi
+                relx_nodetool rpc riak_repl_console object_filtering_load_config $1 $2
+                ;;
+            check)
+                if [ $# -ne 1 ]; then
+                  echo "Usage: $SCRIPT $ACTION check-config <Path to config file>"
+                  exit 1
+                fi
+                relx_nodetool rpc riak_repl_console object_filtering_check_config $1
+                ;;                
+            *)
+                echo "Usage: $SCRIPT $ACTION"
+                echo "enable        (enables realtime and fullsync)"
+                echo "              <Mode> [Mode = realtime, fullsync]"
+                echo "disable       (disables realtime and fullsync)"
+                echo "              <Mode> [Mode = realtime, fullsync]"
+                echo "status"
+                echo "status-all"
+                echo "clear  <Mode> [Mode = all, repl, realtime, fullsync]"
+                echo "print  <Mode> [Mode = all, realtime, fullsync, loaded_repl, loaded_realtime, loaded_fullsync]"
+                echo "              <Mode> <Remote Name>"
+                echo "load   <Mode> <Path to config file> [Mode = repl, realtime, fullsync]"
+                echo "check  <Path to config file>"
+                echo ""
+                exit 1
+            ;;
+        esac
+    ;;    
+
   modes)
         CMD=$1
         shift
-
-        # Make sure the local node is running
 
         relx_nodetool rpc riak_repl_console $CMD $@
         ;;
     realtime|fullsync)
         ACTION=$1
         shift
-
-        # Make sure the local node is running
 
         if [ $# -lt 1 ]; then
             echo "Usage: $SCRIPT $ACTION enable <clustername> |"
@@ -248,8 +325,6 @@ case "$1" in
               fi
               NEWVAL=$1
 
-              # Make sure the local node is running
-
               relx_nodetool rpc riak_repl_console $SUB_CMD $@
               ;;
             cascades)
@@ -272,8 +347,6 @@ case "$1" in
               fi
               NEWVAL=$1
 
-              # Make sure the local node is running
-
               relx_nodetool rpc riak_repl_console $SUB_CMD $@
               ;;
             max_fssink_node)
@@ -282,8 +355,6 @@ case "$1" in
                 exit 1
               fi
               NEWVAL=$1
-
-              # Make sure the local node is running
 
               relx_nodetool rpc riak_repl_console $SUB_CMD $@
               ;;
@@ -299,8 +370,6 @@ case "$1" in
     proxy_get)
         ACTION=$1
         shift
-
-        # Make sure the local node is running
 
         if [ $# -ne 2 ]; then
             echo "Usage: $SCRIPT $ACTION enable <clustername> |"
@@ -374,8 +443,6 @@ case "$1" in
             echo "                       block-provider-redirect <from-cluster> <to-cluster>"
             exit 1
         fi
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console add_block_provider_redirect $1 $2
         ;;
     show-block-provider-redirect)
@@ -386,8 +453,6 @@ case "$1" in
             echo "                       show-block-provider-redirect <from-cluster>"
             exit 1
         fi
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console show_block_provider_redirect $1
         ;;
     delete-block-provider-redirect)
@@ -398,8 +463,6 @@ case "$1" in
             echo "                       delete-block-provider-redirect <from-cluster>"
             exit 1
         fi
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console delete_block_provider_redirect $1
         ;;
     show-local-cluster-id)
@@ -410,8 +473,6 @@ case "$1" in
             echo "                       show-local-cluster-id"
             exit 1
         fi
-        # Make sure the local node is running
-
         relx_nodetool rpc riak_repl_console show_local_cluster_id
         ;;
     *)
